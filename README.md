@@ -13,7 +13,7 @@ This system follows the idea of "a harness for every task" — small, composable
 
 ## Requirements
 
-- **pi** — https://github.com/earendil-works/pi-coding-agent
+- **pi** — https://github.com/earendil-works/pi
 - **Absurd** — https://github.com/earendil-works/absurd (durable execution engine)
 
 ## Current Agents
