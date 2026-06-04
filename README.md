@@ -11,6 +11,11 @@ A lightweight multi-agent swarm built on top of **pi** + **Absurd**.
 
 This system follows the idea of "a harness for every task" — small, composable agents instead of one monolithic agent.
 
+## Requirements
+
+- **pi** — https://github.com/earendil-works/pi-coding-agent
+- **Absurd** — https://github.com/earendil-works/absurd (durable execution engine)
+
 ## Current Agents
 
 | Agent            | Responsibility                              | Status     |
