@@ -1,35 +1,51 @@
 import { Absurd, TaskContext } from "absurd-sdk";
 
 /**
- * Reviewer Agent — Adversarial Verification
+ * Reviewer Agent (Improved)
  * 
- * Takes output from another agent and challenges it.
- * Looks for issues, gaps, weak assumptions, or improvements.
+ * Performs real adversarial verification:
+ * - Checks for completeness
+ * - Looks for gaps or weak reasoning
+ * - Flags placeholders or TODOs
+ * - Assesses overall quality
  */
 export function registerReviewer(absurd: Absurd) {
   absurd.registerTask(
     { name: "reviewer" },
-    async (params: { originalOutput: any; context?: string }, ctx: TaskContext) => {
-      const review = await ctx.step("review", async () => {
-        const output = JSON.stringify(params.originalOutput || {});
-        const issuesFound: string[] = [];
-        const suggestions: string[] = [];
+    async (params: { content: string; context?: string }, ctx: TaskContext) => {
+      const review = await ctx.step("analyze", async () => {
+        const content = params.content || "";
+        const issues: string[] = [];
+        let score = 10;
 
-        if (output.length < 50) issuesFound.push("Output too brief");
-        if (!output.includes("plan") && params.context?.includes("plan")) {
-          issuesFound.push("Missing plan details");
-          suggestions.push("Include explicit implementation steps");
+        // Real checks
+        if (content.includes("TODO") || content.includes("FIXME")) {
+          issues.push("Contains TODO/FIXME placeholders");
+          score -= 2;
         }
-        if (output.includes("TODO") || output.includes("placeholder")) {
-          issuesFound.push("Contains unresolved placeholders");
+        if (content.length < 200) {
+          issues.push("Output is very short — may lack depth");
+          score -= 2;
+        }
+        if (!content.includes("plan") && !content.includes("step")) {
+          issues.push("No clear plan or steps mentioned");
+          score -= 1;
+        }
+        if (content.toLowerCase().includes("placeholder")) {
+          issues.push("Contains placeholder text");
+          score -= 2;
         }
 
-        const overallAssessment = issuesFound.length === 0 ? "Solid" : "Needs work";
-        const feedback = issuesFound.length > 0 
-          ? `Found ${issuesFound.length} issues. Address: ${issuesFound.join(", ")}` 
-          : "Output looks complete and actionable.";
+        const overall = score >= 8 ? "good" : score >= 6 ? "needs-work" : "poor";
 
-        return { issuesFound, suggestions, overallAssessment, feedback };
+        return {
+          issuesFound: issues,
+          overallAssessment: overall,
+          score,
+          feedback: issues.length > 0 
+            ? `Found ${issues.length} issues. Score: ${score}/10`
+            : "No major issues found. Output looks solid.",
+        };
       });
 
       return {

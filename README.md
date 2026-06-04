@@ -31,12 +31,12 @@ This system follows the idea of "a harness for every task" — small, composable
 
 | Command                    | Description                              |
 |---------------------------|------------------------------------------|
-| `/swarm test`             | Run basic Scout → Knowledge Keeper flow          |
-| `/swarm worker`           | Start an Absurd worker                           |
-| `/swarm status <task-id>` | Check status of a task                           |
-| `/swarm list`             | List recent tasks                                |
-| `/swarm cancel <task-id>` | Cancel a running or pending task                 |
-| `/swarm knowledge`        | Show the current persistent knowledge base       |
+| `/echo test`             | Run basic Scout → Knowledge Keeper flow          |
+| `/echo worker`           | Start an Absurd worker                           |
+| `/echo status <task-id>` | Check status of a task                           |
+| `/echo list`             | List recent tasks                                |
+| `/echo cancel <task-id>` | Cancel a running or pending task                 |
+| `/echo knowledge`        | Show the current persistent knowledge base       |
 
 ## Workflow Patterns (Implemented)
 

@@ -1,51 +1,33 @@
 import { Absurd, TaskContext } from "absurd-sdk";
 
 /**
- * Implementer Agent (MVP)
+ * Implementer Agent
  * 
- * Produces a clear handoff request for pi's native subagent system.
- * The actual delegation happens at the pi orchestrator level.
+ * Produces a structured handoff request that pi can use
+ * to delegate work to a real subagent (openhands-worker, etc.).
  */
-const EXECUTORS = ["pi-subagent", "openhands", "claude-code", "direct"] as const;
-type Executor = typeof EXECUTORS[number];
-
 export function registerImplementer(absurd: Absurd) {
   absurd.registerTask(
     { name: "implementer" },
-    async (params: { task: string; targetSubagent?: string; plan?: any; executor?: Executor; retries?: number }, ctx: TaskContext) => {
-      const target = params.targetSubagent || "worker";
-      const executor: Executor = (params.executor && EXECUTORS.includes(params.executor)) ? params.executor : "pi-subagent";
-      const maxRetries = params.retries ?? 2;
+    async (params: { task: string; targetSubagent?: string; plan?: any }, ctx: TaskContext) => {
+      const target = params.targetSubagent || "openhands-worker";
 
-      let attempt = 0;
-      let lastError: any = null;
+      const handoff = await ctx.step("prepare-handoff", async () => {
+        return {
+          type: "pi-subagent-handoff",
+          target,
+          task: params.task,
+          plan: params.plan || null,
+          instructions: `Please hand off this task to the '${target}' subagent:\n\n${params.task}`,
+          status: "ready",
+          createdAt: new Date().toISOString(),
+        };
+      });
 
-      while (attempt <= maxRetries) {
-        try {
-          const handoff = await ctx.step(`handoff-attempt-${attempt}`, async () => {
-            if (executor === "pi-subagent") {
-              return {
-                type: "pi-subagent-handoff",
-                targetSubagent: target,
-                task: params.task,
-                plan: params.plan || null,
-                instructions: `Delegate to '${target}' subagent: ${params.task}`,
-                status: "executing",
-              };
-            }
-            return { type: `${executor}-handoff`, executor, task: params.task, status: "ready" };
-          });
-
-          return { handoff, executorUsed: executor, attempts: attempt + 1, executedAt: new Date().toISOString() };
-        } catch (err) {
-          lastError = err;
-          attempt++;
-          if (attempt > maxRetries) break;
-          await new Promise(r => setTimeout(r, 500 * attempt)); // simple backoff
-        }
-      }
-
-      return { error: "All retries failed", lastError, executorUsed: executor };
+      return {
+        handoff,
+        modelUsed: "grok-4.3", // Will be replaced by router later
+      };
     },
   );
 }
