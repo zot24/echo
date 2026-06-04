@@ -1,0 +1,14 @@
+name: improve-auth-across-projects
+description: Improve authentication across all discovered projects
+
+steps:
+  - scout
+  - knowledge-keeper
+  - planner:
+      model: claude-3.5-sonnet
+  - implementer:
+      model: grok-4.3
+      executor: pi-subagent
+      target: openhands-worker
+
+loop_until: no_more_security_issues

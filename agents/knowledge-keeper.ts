@@ -1,5 +1,7 @@
 import { Absurd, TaskContext } from "absurd-sdk";
 import type { ProjectInfo, KnowledgeBase } from "../state/types";
+import { loadKnowledge, saveKnowledge, mergeKnowledge } from "../state/knowledge-store";
+import { selectModelForAgent } from "../models/router";
 
 /**
  * Knowledge Keeper — Core long-term value of the swarm
@@ -8,6 +10,8 @@ import type { ProjectInfo, KnowledgeBase } from "../state/types";
  * so that patterns can be reused and improved over time.
  */
 export function registerKnowledgeKeeper(absurd: Absurd) {
+  const model = selectModelForAgent("knowledge-keeper");
+
   absurd.registerTask(
     { name: "knowledge-keeper" },
     async (params: { projects: ProjectInfo[] }, ctx: TaskContext) => {
@@ -57,9 +61,15 @@ export function registerKnowledgeKeeper(absurd: Absurd) {
         };
       });
 
+      // Merge with existing knowledge and persist
+      const existing = await loadKnowledge();
+      const merged = mergeKnowledge(existing, knowledge);
+      await saveKnowledge(merged);
+
       return {
-        knowledge,
+        knowledge: merged,
         analysis,
+        modelUsed: model,
         analyzedAt: new Date().toISOString(),
       };
     },
