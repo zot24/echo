@@ -21,8 +21,8 @@ export function registerTestWorkflow(absurd: Absurd) {
   absurd.registerTask(
     { name: "test-swarm-scout-then-keeper" },
     async (params: { request: string }, ctx: TaskContext) => {
-      // Spawn scout into a different queue to avoid deadlock
-      const scout = await absurd.spawn("repo-scout", { requestId: Date.now().toString() }, { queue: "agents" });
+      // Spawn scout
+      const scout = await absurd.spawn("repo-scout", { requestId: Date.now().toString() });
       const scoutResult = await ctx.awaitTaskResult(scout.taskID, { timeout: 120 });
 
       const projects = scoutResult.state === "completed" 
