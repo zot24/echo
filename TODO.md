@@ -1,4 +1,11 @@
-# Swarm System TODO
+# Echo System TODO (Dynamic Workflows)
+
+## Dynamic Workflows (High Priority)
+- [ ] Respect model and executor overrides in dynamic-executor
+- [ ] Build custom monitoring dashboard (HTML artifact, like Omar's)
+- [ ] Start Natural Language Orchestrator (generate + execute from plain text)
+- [ ] Improve condition evaluation in loop_until
+- [ ] Add retry logic and error recovery to dynamic-executor
 
 ## Core Agents
 - [ ] Create `Monitor` agent (proactive repo watching, git hooks, scheduled scans)
@@ -25,8 +32,8 @@
 - [ ] Add knowledge versioning and rollback
 
 ## Commands & UX (pi extension)
-- [ ] Add `/swarm dashboard` (open Habitat in browser)
-- [ ] Add `/swarm pause` and `/swarm resume`
+- [ ] Add `/echo dashboard` (open Habitat in browser)
+- [ ] Add `/echo pause` and `/echo resume`
 - [ ] Improve `/swarm status` output formatting
 - [ ] Add progress streaming for long workflows
 - [ ] Add confirmation prompts before spawning large workflows
