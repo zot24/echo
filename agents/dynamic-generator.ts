@@ -1,82 +1,28 @@
 import { Absurd, TaskContext } from "absurd-sdk";
 
 /**
- * Workflow Generator Agent
+ * Dynamic Generator (Hybrid Template Mode)
  * 
- * Takes a high-level task and generates a human-readable
- * dynamic workflow definition in YAML format.
+ * Can generate workflows from scratch OR base them on classic templates.
  */
-export function registerWorkflowGenerator(absurd: Absurd) {
+export function registerDynamicGenerator(absurd: Absurd) {
   absurd.registerTask(
-    { name: "workflow-generator" },
+    { name: "dynamic-generator" },
     async (params: { 
       task: string; 
-      constraints?: {
-        preferredModels?: string[];
-        requireVerification?: boolean;
-        maxIterations?: number;
-      }
+      template?: string;           // optional: "loop-until-done", "fanout-and-synthesize", etc.
+      constraints?: any 
     }, ctx: TaskContext) => {
       const workflow = await ctx.step("generate", async () => {
-        // In a real implementation, this would call a strong model
-        // (e.g. claude-3.5-sonnet or grok-4.3) to generate the workflow.
-        //
-        // For now we return a sensible default structure.
+        const useTemplate = params.template;
 
-        const requireVerification = params.constraints?.requireVerification ?? true;
-        const maxIter = params.constraints?.maxIterations ?? 4;
-
-        const steps: any[] = [
-          {
-            id: "scout",
-            agent: "repo-scout",
-            input: { request: params.task },
-          },
-          {
-            id: "analyze",
-            agent: "knowledge-keeper",
-            depends_on: ["scout"],
-            input: { projects: "{{scout.result.projects}}" },
-          },
-          {
-            id: "plan",
-            agent: "planner",
-            depends_on: ["analyze"],
-            model: "claude-3.5-sonnet",
-            input: { context: "{{analyze.result.knowledge}}" },
-          },
-          {
-            id: "implement",
-            agent: "implementer",
-            depends_on: ["plan"],
-            model: "grok-4.3",
-            executor: "pi-subagent",
-            input: { task: "{{plan.result.plan}}" },
-          },
-        ];
-
-        if (requireVerification) {
-          steps.push({
-            id: "review",
-            agent: "reviewer",
-            depends_on: ["implement"],
-            input: { content: "{{implement.result.handoff}}" },
-          });
+        if (useTemplate) {
+          // Template-based generation
+          return buildFromTemplate(useTemplate, params.task, params.constraints);
         }
 
-        return {
-          kind: "feature-implementation",
-          name: params.task.toLowerCase().replace(/\s+/g, "-").slice(0, 60),
-          description: params.task,
-          version: 1,
-          steps,
-          control: requireVerification
-            ? {
-                loop_until: "review.issues.length == 0",
-                max_iterations: maxIter,
-              }
-            : undefined,
-        };
+        // Default: generate from scratch
+        return buildFromScratch(params.task, params.constraints);
       });
 
       return {
@@ -85,4 +31,49 @@ export function registerWorkflowGenerator(absurd: Absurd) {
       };
     },
   );
+}
+
+function buildFromScratch(task: string, constraints: any) {
+  return {
+    kind: "feature-implementation",
+    name: task.toLowerCase().replace(/\s+/g, "-").slice(0, 60),
+    description: task,
+    version: 1,
+    template: null,
+    steps: [
+      { id: "scout", agent: "repo-scout", input: { request: task } },
+      { id: "analyze", agent: "knowledge-keeper", depends_on: ["scout"] },
+      { id: "plan", agent: "planner", depends_on: ["analyze"], model: "claude-3.5-sonnet" },
+      { id: "implement", agent: "implementer", depends_on: ["plan"], model: "grok-4.3" },
+      { id: "review", agent: "reviewer", depends_on: ["implement"] },
+    ],
+    control: {
+      loop_until: "review.issues.length == 0",
+      max_iterations: constraints?.maxIterations || 4,
+    },
+  };
+}
+
+function buildFromTemplate(template: string, task: string, constraints: any) {
+  // Example: customize loop-until-done
+  if (template === "loop-until-done") {
+    return {
+      kind: "iterative-improvement",
+      name: task.toLowerCase().replace(/\s+/g, "-").slice(0, 60),
+      description: task,
+      version: 1,
+      template: "loop-until-done",
+      steps: [
+        { id: "work", agent: "implementer", input: { task } },
+        { id: "review", agent: "reviewer", depends_on: ["work"] },
+      ],
+      control: {
+        loop_until: "review.issues.length == 0",
+        max_iterations: constraints?.maxIterations || 6,
+      },
+    };
+  }
+
+  // Fallback to default generation
+  return buildFromScratch(task, constraints);
 }
