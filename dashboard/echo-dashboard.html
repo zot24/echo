@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echo Dashboard</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 40px; background: #f8f9fa; }
+    h1 { color: #111; }
+    .workflow { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .kind { font-size: 0.85rem; color: #666; }
+    .meta { color: #555; font-size: 0.9rem; }
+    .status { padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+    .completed { background: #d4edda; color: #155724; }
+    .running { background: #fff3cd; color: #856404; }
+    .failed { background: #f8d7da; color: #721c24; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+    th { background: #f1f3f5; }
+  </style>
+</head>
+<body>
+  <h1>Echo Dashboard</h1>
+  <p>Lightweight monitoring for Dynamic Workflows</p>
+
+  <div class="workflow">
+    <h3>improve-auth-across-projects</h3>
+    <div class="kind">kind: feature-implementation • template: null</div>
+    <div class="meta">Iterations: 3 • Generated: 2026-06-04 22:41</div>
+    <span class="status completed">Completed</span>
+
+    <table>
+      <tr><th>Step</th><th>Agent</th><th>Model</th><th>Status</th></tr>
+      <tr><td>scout</td><td>repo-scout</td><td>grok-4.3</td><td class="status completed">done</td></tr>
+      <tr><td>analyze</td><td>knowledge-keeper</td><td>claude-3.5-sonnet</td><td class="status completed">done</td></tr>
+      <tr><td>plan</td><td>planner</td><td>claude-3.5-sonnet</td><td class="status completed">done</td></tr>
+      <tr><td>implement</td><td>implementer</td><td>grok-4.3</td><td class="status completed">done</td></tr>
+      <tr><td>review</td><td>reviewer</td><td>grok-4.3</td><td class="status completed">done</td></tr>
+    </table>
+  </div>
+
+  <div class="workflow">
+    <h3>refactor-payment-service</h3>
+    <div class="kind">kind: iterative-improvement • template: loop-until-done</div>
+    <div class="meta">Iterations: 5 • Generated: 2026-06-04 21:12</div>
+    <span class="status running">Running</span>
+  </div>
+
+  <p style="color:#888; font-size:0.85rem; margin-top:40px;">
+    This is a static demo. Connect to Postgres + Absurd for live data.
+  </p>
+</body>
+</html>
