@@ -10,19 +10,17 @@ export function registerDynamicGenerator(absurd: Absurd) {
     { name: "dynamic-generator" },
     async (params: { 
       task: string; 
-      template?: string;           // optional: "loop-until-done", "fanout-and-synthesize", etc.
+      project?: { name: string; path: string };   // NEW: project context
+      template?: string;
       constraints?: any 
     }, ctx: TaskContext) => {
       const workflow = await ctx.step("generate", async () => {
         const useTemplate = params.template;
 
         if (useTemplate) {
-          // Template-based generation
-          return buildFromTemplate(useTemplate, params.task, params.constraints);
+          return buildFromTemplate(useTemplate, params.task, params.project, params.constraints);
         }
-
-        // Default: generate from scratch
-        return buildFromScratch(params.task, params.constraints);
+        return buildFromScratch(params.task, params.project, params.constraints);
       });
 
       return {
@@ -33,10 +31,11 @@ export function registerDynamicGenerator(absurd: Absurd) {
   );
 }
 
-function buildFromScratch(task: string, constraints: any) {
+function buildFromScratch(task: string, project: any, constraints: any) {
   return {
     kind: "feature-implementation",
     name: task.toLowerCase().replace(/\s+/g, "-").slice(0, 60),
+    project: project || null,
     description: task,
     version: 1,
     template: null,
@@ -54,12 +53,12 @@ function buildFromScratch(task: string, constraints: any) {
   };
 }
 
-function buildFromTemplate(template: string, task: string, constraints: any) {
-  // Example: customize loop-until-done
+function buildFromTemplate(template: string, task: string, project: any, constraints: any) {
   if (template === "loop-until-done") {
     return {
       kind: "iterative-improvement",
       name: task.toLowerCase().replace(/\s+/g, "-").slice(0, 60),
+      project: project || null,
       description: task,
       version: 1,
       template: "loop-until-done",
