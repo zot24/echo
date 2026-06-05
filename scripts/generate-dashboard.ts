@@ -15,7 +15,7 @@ async function main() {
   await client.connect();
 
   const res = await client.query(`
-    SELECT task_id, name, state, created_at, result
+    SELECT task_id, queue, state, created_at, result
     FROM absurd.t_default
     ORDER BY created_at DESC
     LIMIT 30
@@ -25,7 +25,7 @@ async function main() {
 
   const workflows = res.rows.map(row => ({
     id: row.task_id,
-    name: row.name || "unknown",
+    name: row.queue || "default",
     status: row.state,
     created: row.created_at,
     kind: row.result?.kind || "unknown",
