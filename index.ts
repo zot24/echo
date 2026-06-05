@@ -5,6 +5,7 @@ import { registerPlanner } from "./agents/planner";
 import { registerReviewer } from "./agents/reviewer";
 import { registerImplementer } from "./agents/implementer";
 import { registerWorkflowGenerator } from "./agents/workflow-generator";
+import { registerDynamicExecutor } from "./agents/dynamic-executor";
 import { registerTestWorkflow, registerDashboard } from "./workflows/test-swarm";
 import { registerLoopUntilDone } from "./workflows/loop-until-done";
 import { registerFanoutAndSynthesize } from "./workflows/fanout-and-synthesize";
@@ -25,6 +26,7 @@ export function registerSwarmAgents(absurd: Absurd) {
   registerReviewer(absurd);
   registerImplementer(absurd);
   registerWorkflowGenerator(absurd);
+  registerDynamicExecutor(absurd);
   registerTestWorkflow(absurd);
   registerDashboard(absurd);
   registerLoopUntilDone(absurd);
@@ -33,5 +35,5 @@ export function registerSwarmAgents(absurd: Absurd) {
   registerTournament(absurd);
   registerAuthImprovementWorkflow(absurd);
 
-  console.log("[echo] Registered: repo-scout, knowledge-keeper, planner, reviewer, implementer, workflow-generator, loop-until-done, fanout-and-synthesize, generate-and-filter, tournament, auth-improvement");
+  console.log("[echo] Registered: repo-scout, knowledge-keeper, planner, reviewer, implementer, workflow-generator, dynamic-executor, loop-until-done, fanout-and-synthesize, generate-and-filter, tournament, auth-improvement");
 }
