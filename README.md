@@ -31,12 +31,13 @@ This system follows the idea of "a harness for every task" — small, composable
 
 | Command                    | Description                              |
 |---------------------------|------------------------------------------|
-| `/echo test`             | Run basic Scout → Knowledge Keeper flow          |
-| `/echo worker`           | Start an Absurd worker                           |
-| `/echo status <task-id>` | Check status of a task                           |
-| `/echo list`             | List recent tasks                                |
-| `/echo cancel <task-id>` | Cancel a running or pending task                 |
-| `/echo knowledge`        | Show the current persistent knowledge base       |
+| `/echo test`               | Run basic Scout → Knowledge Keeper flow              |
+| `/echo generate <task>`  | Generate a dynamic workflow from natural language    |
+| `/echo worker`           | Start an Absurd worker                               |
+| `/echo status <task-id>` | Check status of a task                               |
+| `/echo list`             | List recent tasks                                    |
+| `/echo cancel <task-id>` | Cancel a running or pending task                     |
+| `/echo knowledge`        | Show the current persistent knowledge base           |
 
 ## Workflow Patterns (Implemented)
 
@@ -120,17 +121,17 @@ This is very useful when working with long-running or background swarm workflows
 ## Quickstart + Examples
 
 ```bash
-# 1. Basic end-to-end (scout + knowledge)
-/swarm test
+# 1. Generate a dynamic workflow (recommended)
+/echo generate "Improve authentication across all projects with verification"
 
-# 2. Full auth improvement across projects (end-to-end example)
-# (run with worker active)
+# 2. Basic end-to-end test
+/echo test
 
 # 3. Status / control
-/swarm status <id>
-/swarm list
-/swarm cancel <id>
-/swarm knowledge
+/echo status <id>
+/echo list
+/echo cancel <id>
+/echo knowledge
 
 # 4. Habitat dashboard (recommended for long workflows)
 habitat run -db-name absurd2  # open http://localhost:7890
