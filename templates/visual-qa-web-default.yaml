@@ -1,0 +1,28 @@
+name: visual-qa-web-default
+kind: visual-qa
+description: Default Visual QA template for modern web projects
+version: 1
+
+base_steps:
+  - id: capture
+    agent: playwright-capture
+    input:
+      urls: ["http://localhost:3000"]
+
+  - id: review
+    agent: web-ui-reviewer
+    depends_on: [capture]
+
+control:
+  max_iterations: 1
+
+dynamize_rules:
+  - if: has_tailwind
+    add:
+      - agent: tailwind-consistency-reviewer
+  - if: has_dark_mode
+    add:
+      - agent: dark-mode-reviewer
+  - if: prefers_accessibility
+    add:
+      - agent: accessibility-reviewer
