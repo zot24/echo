@@ -1,0 +1,29 @@
+{
+  "name": "swarm",
+  "version": "1.0.0",
+  "description": "A lightweight multi-agent swarm built on top of **pi** + **Absurd**.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zot24/echo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zot24/echo/issues"
+  },
+  "homepage": "https://github.com/zot24/echo#readme",
+  "devDependencies": {
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  }
+}
