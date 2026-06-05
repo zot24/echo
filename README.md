@@ -33,6 +33,7 @@ This system follows the idea of "a harness for every task" — small, composable
 |---------------------------|------------------------------------------|
 | `/echo test`               | Run basic Scout → Knowledge Keeper flow              |
 | `/echo generate <task>`  | Generate a dynamic workflow from natural language    |
+| `/echo dashboard`        | Open the custom Echo monitoring dashboard            |
 | `/echo worker`           | Start an Absurd worker                               |
 | `/echo status <task-id>` | Check status of a task                               |
 | `/echo list`             | List recent tasks                                    |
