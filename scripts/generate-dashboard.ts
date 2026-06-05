@@ -1,7 +1,7 @@
 /**
- * Echo Dashboard Generator (Improved)
+ * Echo Dashboard Generator (Robust)
  * 
- * Shows multiple concurrent projects + basic live activity log.
+ * Dynamically discovers columns and gracefully handles different Absurd schemas.
  */
 import { Client } from "pg";
 import fs from "node:fs";
@@ -14,8 +14,23 @@ async function main() {
   const client = new Client({ connectionString: DB_URL });
   await client.connect();
 
+  // Get actual columns
+  const colsRes = await client.query(`
+    SELECT column_name 
+    FROM information_schema.columns 
+    WHERE table_schema = 'absurd' AND table_name = 't_default'
+  `);
+
+  const columns = colsRes.rows.map(r => r.column_name);
+  console.log("Detected columns:", columns);
+
+  // Build safe select list
+  const selectList = columns.includes("result") 
+    ? "task_id, state, created_at, result" 
+    : "task_id, state, created_at";
+
   const res = await client.query(`
-    SELECT task_id, queue, state, created_at, result
+    SELECT ${selectList}
     FROM absurd.t_default
     ORDER BY created_at DESC
     LIMIT 30
@@ -25,10 +40,10 @@ async function main() {
 
   const workflows = res.rows.map(row => ({
     id: row.task_id,
-    name: row.queue || "default",
+    name: "workflow",
     status: row.state,
     created: row.created_at,
-    kind: row.result?.kind || "unknown",
+    kind: row.result?.kind || "dynamic",
     iterations: row.result?.iterations || 1,
     models: extractModels(row.result),
   }));
@@ -40,9 +55,7 @@ async function main() {
 
 function extractModels(result: any): string[] {
   if (!result?.results) return [];
-  return Object.values(result.results)
-    .map((r: any) => r.model)
-    .filter(Boolean) as string[];
+  return Object.values(result.results).map((r: any) => r.model).filter(Boolean) as string[];
 }
 
 function generateHTML(workflows: any[]): string {
@@ -55,15 +68,6 @@ function generateHTML(workflows: any[]): string {
       <div class="kind">${w.kind} • ${w.iterations} iteration(s)</div>
       <div class="meta">Created: ${new Date(w.created).toLocaleString()}</div>
       <div class="models">Models: ${w.models.join(", ") || "—"}</div>
-
-      <details style="margin-top:12px;">
-        <summary style="cursor:pointer; color:#555;">View Activity Log</summary>
-        <div style="font-family:monospace; font-size:0.85rem; background:#f8f9fa; padding:10px; margin-top:8px; border-radius:4px;">
-          [${new Date(w.created).toLocaleTimeString()}] Workflow started<br>
-          [${new Date(w.created).toLocaleTimeString()}] Running ${w.iterations} iteration(s)<br>
-          [${new Date().toLocaleTimeString()}] Current status: ${w.status}
-        </div>
-      </details>
     </div>
   `).join("\n");
 
@@ -73,28 +77,20 @@ function generateHTML(workflows: any[]): string {
   <meta charset="UTF-8">
   <title>Echo Dashboard</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 40px; background: #f8f9fa; color: #222; }
-    h1 { margin-bottom: 8px; }
-    .workflow { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 20px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .kind { font-size: 0.9rem; color: #555; margin: 6px 0; }
+    body { font-family: system-ui, sans-serif; margin: 40px; background: #f8f9fa; }
+    .workflow { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 20px; margin-bottom: 18px; }
+    .kind { font-size: 0.9rem; color: #555; }
     .meta { font-size: 0.85rem; color: #666; }
-    .models { font-size: 0.85rem; color: #444; margin-top: 6px; }
-    .status { padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+    .status { padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; }
     .completed { background: #d4edda; color: #155724; }
     .running { background: #fff3cd; color: #856404; }
     .failed { background: #f8d7da; color: #721c24; }
-    details summary { outline: none; }
   </style>
 </head>
 <body>
   <h1>Echo Dashboard</h1>
-  <p style="color:#666;">Monitoring multiple concurrent dynamic workflows</p>
-
-  ${cards.length > 0 ? cards : "<p>No workflows found yet.</p>"}
-
-  <p style="margin-top:40px; color:#888; font-size:0.8rem;">
-    Auto-generated from Absurd • Run <code>scripts/generate-dashboard.ts</code> to refresh
-  </p>
+  <p>Live data from Absurd</p>
+  ${cards.length > 0 ? cards : "<p>No workflows found.</p>"}
 </body>
 </html>`;
 }
