@@ -24,10 +24,8 @@ async function main() {
   const columns = colsRes.rows.map(r => r.column_name);
   console.log("Detected columns:", columns);
 
-  // Build safe select list
-  const selectList = columns.includes("result") 
-    ? "task_id, state, created_at, result" 
-    : "task_id, state, created_at";
+  // Always use a safe, minimal column list
+  const selectList = "task_id, state, created_at, result";
 
   const res = await client.query(`
     SELECT ${selectList}
