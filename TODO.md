@@ -60,6 +60,8 @@
 - [ ] Support for human-in-the-loop approval steps
 - [ ] Add "Agent Marketplace" concept (shareable agent definitions)
 - [ ] Make Echo callable from other tools (Claude Code, Grok Build CLI, custom agents) via CLI / HTTP / MCP so they can use Echo's dynamic workflows without running inside pi (Echo as a reusable capability/service)
+- [ ] Add git hygiene support (worktree creation, branch management, commits) to the implementer or a dedicated git-operator agent
+- [ ] Make Visual QA workflow produce actual code changes (not just analysis) when desired
 
 ## Polish & Maintenance
 - [ ] Add tests for all agents and workflows
