@@ -21,7 +21,7 @@ async function main() {
   console.log("[manual-qa] Capturing screenshots...");
   const capture = await absurd.spawn("playwright-capture", {
     urls: [URL],
-  }, { queue: "agents" });
+  }, { queue: "default" });
 
   const captureResult = await absurd.awaitTaskResult(capture.taskID, { timeout: 120000 });
   console.log("[manual-qa] Capture done.");
@@ -30,7 +30,7 @@ async function main() {
   console.log("[manual-qa] Running web-ui-reviewer...");
   const review = await absurd.spawn("web-ui-reviewer", {
     screenshots: captureResult.result?.screenshots || {},
-  }, { queue: "agents" });
+  }, { queue: "default" });
 
   const reviewResult = await absurd.awaitTaskResult(review.taskID, { timeout: 60000 });
   console.log("[manual-qa] Review result:", reviewResult);
