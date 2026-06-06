@@ -62,6 +62,7 @@
 - [ ] Make Echo callable from other tools (Claude Code, Grok Build CLI, custom agents) via CLI / HTTP / MCP so they can use Echo's dynamic workflows without running inside pi (Echo as a reusable capability/service)
 - [ ] Add git hygiene support (worktree creation, branch management, commits) to the implementer or a dedicated git-operator agent
 - [ ] Make Visual QA workflow produce actual code changes (not just analysis) when desired
+- [ ] Future: Move away from Absurd toward a SQL wrapper + API layer with extra logic on top, so Echo can be used directly from other agents/tools (pi, Claude Code, xAI, etc.) while keeping portability and reducing external dependencies
 
 ## Polish & Maintenance
 - [ ] Add tests for all agents and workflows
