@@ -1,160 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Echo Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echo • Dashboard</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 40px; background: #f8f9fa; }
-    .workflow { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 20px; margin-bottom: 18px; }
-    .kind { font-size: 0.9rem; color: #555; }
-    .status { padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; }
-    .completed { background: #d4edda; color: #155724; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      background: #f8f9fa;
+      color: #222;
+    }
+    .header {
+      background: white;
+      border-bottom: 1px solid #ddd;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .project-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+    .project-header {
+      background: #f1f3f5;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .project-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .project-path {
+      font-family: monospace;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .workflow {
+      padding: 16px 24px;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .workflow:last-child {
+      border-bottom: none;
+    }
+    .status {
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
     .running { background: #fff3cd; color: #856404; }
+    .completed { background: #d4edda; color: #155724; }
     .failed { background: #f8d7da; color: #721c24; }
+    .meta {
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .log {
+      background: #f8f9fa;
+      padding: 20px 24px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #444;
+      border-top: 1px solid #eee;
+    }
   </style>
 </head>
 <body>
-  <h1>Echo Dashboard</h1>
-  <p>Live data from Absurd</p>
-  
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">test-swarm-scout-then-keeper</h3>
-        <span class="status pending">pending</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/5/2026, 12:55:09 AM</div>
-    </div>
-  
+  <div class="header">
+    <h1>Echo Dashboard</h1>
+    <div style="color:#666; font-size:0.9rem;">Live monitoring for dynamic workflows</div>
+  </div>
 
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">test-swarm-scout-then-keeper</h3>
-        <span class="status failed">failed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/4/2026, 5:20:44 PM</div>
-    </div>
-  
+  <div class="container">
 
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
+    <!-- Example Project -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-name">nworth</div>
+          <div class="project-path">/Users/anon/Desktop/code/nworth</div>
+        </div>
+        <div style="font-size:0.8rem; color:#888;">3 workflows</div>
       </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
-    </div>
-  
 
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
+      <div class="workflow">
+        <div>
+          <strong>visual-qa-run-1</strong>
+          <div class="meta">kind: visual-qa • 1 iteration • grok-4.3 + claude-3.5</div>
+        </div>
+        <div>
+          <span class="status completed">completed</span>
+        </div>
       </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
-    </div>
-  
 
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
+      <div class="workflow">
+        <div>
+          <strong>improve-auth</strong>
+          <div class="meta">kind: feature-implementation • 4 iterations • mixed models</div>
+        </div>
+        <div>
+          <span class="status running">running</span>
+        </div>
       </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
-    </div>
-  
 
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
+      <div class="log">
+        [14:32] Playwright captured 3 pages<br>
+        [14:33] web-ui-reviewer completed (4 recommendations)<br>
+        [14:35] template-dynamizer added accessibility check
       </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
     </div>
-  
 
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
+    <div style="text-align:center; color:#888; font-size:0.85rem; margin-top:60px;">
+      This is a redesigned static dashboard.<br>
+      Connect to real Absurd data for live updates.
     </div>
-  
 
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
-    </div>
-  
-
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
-    </div>
-  
-
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
-    </div>
-  
-
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
-    </div>
-  
-
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">repo-scout</h3>
-        <span class="status completed">completed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:22:34 PM</div>
-    </div>
-  
-
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">test-swarm-scout-then-keeper</h3>
-        <span class="status failed">failed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/3/2026, 11:17:30 PM</div>
-    </div>
-  
-
-    <div class="workflow">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">test-swarm-scout-then-keeper</h3>
-        <span class="status failed">failed</span>
-      </div>
-      <div class="kind">dynamic • 1 iteration(s)</div>
-      <div class="meta">Created: 6/2/2026, 10:14:20 PM</div>
-    </div>
-  
+  </div>
 </body>
 </html>
