@@ -21,16 +21,16 @@ export function registerTestWorkflow(absurd: Absurd) {
   absurd.registerTask(
     { name: "test-swarm-scout-then-keeper" },
     async (params: { request: string }, ctx: TaskContext) => {
-      // Spawn scout
-      const scout = await absurd.spawn("repo-scout", { requestId: Date.now().toString() });
+      // Spawn scout in a different queue to avoid deadlock
+      const scout = await absurd.spawn("repo-scout", { requestId: Date.now().toString() }, { queue: "agents" });
       const scoutResult = await ctx.awaitTaskResult(scout.taskID, { timeout: 120 });
 
       const projects = scoutResult.state === "completed" 
         ? scoutResult.result?.projects || [] 
         : [];
 
-      // Spawn knowledge keeper with scout output
-      const keeper = await absurd.spawn("knowledge-keeper", { projects });
+      // Spawn knowledge keeper in agents queue
+      const keeper = await absurd.spawn("knowledge-keeper", { projects }, { queue: "agents" });
       const keeperResult = await ctx.awaitTaskResult(keeper.taskID, { timeout: 60 });
 
       return {
