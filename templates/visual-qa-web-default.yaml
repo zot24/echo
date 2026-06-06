@@ -13,6 +13,10 @@ base_steps:
     agent: web-ui-reviewer
     depends_on: [capture]
 
+  - id: dynamize
+    agent: template-dynamizer
+    depends_on: [review]
+
 control:
   max_iterations: 1
 

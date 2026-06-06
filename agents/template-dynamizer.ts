@@ -38,8 +38,12 @@ export function registerTemplateDynamizer(absurd: Absurd) {
 }
 
 function shouldApplyRule(rule: any, context: any): boolean {
-  if (rule.if === "has_tailwind") return context.hasTailwind === true;
-  if (rule.if === "has_dark_mode") return context.hasDarkMode === true;
-  if (rule.if === "prefers_accessibility") return context.prefersAccessibility === true;
+  const condition = rule.if;
+
+  if (condition === "has_tailwind") return !!context.hasTailwind;
+  if (condition === "has_dark_mode") return !!context.hasDarkMode;
+  if (condition === "prefers_accessibility") return !!context.prefersAccessibility;
+  if (condition === "is_web_project") return context.type === "web";
+
   return false;
 }
