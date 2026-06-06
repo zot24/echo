@@ -14,11 +14,8 @@ async function main() {
   console.log(`[manual-qa] Starting Visual QA on: ${URL}`);
 
   const absurd = new Absurd({
-    connectionString: "postgresql://localhost/absurd2",
-    queue: "default",
+    db: "postgresql://localhost/absurd2",
   });
-
-  await absurd.start();
 
   // Step 1: Capture screenshots
   console.log("[manual-qa] Capturing screenshots...");
@@ -27,7 +24,7 @@ async function main() {
   }, { queue: "agents" });
 
   const captureResult = await absurd.awaitTaskResult(capture.taskID, { timeout: 120000 });
-  console.log("[manual-qa] Capture result:", captureResult);
+  console.log("[manual-qa] Capture done.");
 
   // Step 2: Run reviewer
   console.log("[manual-qa] Running web-ui-reviewer...");
@@ -38,7 +35,6 @@ async function main() {
   const reviewResult = await absurd.awaitTaskResult(review.taskID, { timeout: 60000 });
   console.log("[manual-qa] Review result:", reviewResult);
 
-  await absurd.stop();
   console.log("[manual-qa] Done.");
 }
 
